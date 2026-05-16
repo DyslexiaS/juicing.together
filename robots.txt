@@ -1,0 +1,19 @@
+# 揪喝果汁 robots.txt
+# ⚠️  部署前請將 YOUR_DOMAIN 換成真實網域
+
+# 允許所有爬蟲爬取
+User-agent: *
+Allow: /
+
+# 禁止爬取（目前無需要擋的路徑，保留備用）
+# Disallow: /admin/
+
+# Sitemap 位置
+Sitemap: https://YOUR_DOMAIN/sitemap.xml
+
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /assets/
+
+# 爬取頻率建議（可選，非強制）
+# Crawl-delay: 1
