@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   揪喝果汁 Sitemap
-  ⚠️  部署前請將 YOUR_DOMAIN 換成真實網域（例如：juicingtogether.tw）
+  ⚠️  部署前請將 juicing-together.pages.dev 換成真實網域（例如：juicingtogether.tw）
 -->
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -9,14 +9,14 @@
 >
   <!-- 首頁 / Landing Page -->
   <url>
-    <loc>https://YOUR_DOMAIN/</loc>
+    <loc>https://juicing-together.pages.dev/</loc>
     <lastmod>2026-05-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link
       rel="alternate"
       hreflang="zh-TW"
-      href="https://YOUR_DOMAIN/"
+      href="https://juicing-together.pages.dev/"
     />
   </url>
 </urlset>

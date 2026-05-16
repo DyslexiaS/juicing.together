@@ -1,5 +1,5 @@
 # 揪喝果汁 robots.txt
-# ⚠️  部署前請將 YOUR_DOMAIN 換成真實網域
+# ⚠️  部署前請將 juicing-together.pages.dev 換成真實網域
 
 # 允許所有爬蟲爬取
 User-agent: *
@@ -9,7 +9,7 @@ Allow: /
 # Disallow: /admin/
 
 # Sitemap 位置
-Sitemap: https://YOUR_DOMAIN/sitemap.xml
+Sitemap: https://juicing-together.pages.dev/sitemap.xml
 
 # Google Image Bot
 User-agent: Googlebot-Image
