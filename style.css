@@ -220,7 +220,7 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     font-size: 1rem;
     color: var(--dark);
 }
-.nav:not(.scrolled) .brand-mark { color: var(--yellow); }
+.nav:not(.scrolled) .brand-mark { color: var(--orange-lt); }
 .nav:not(.scrolled) .brand-sub  { color: rgba(255,255,255,.9); }
 
 /* Links */
