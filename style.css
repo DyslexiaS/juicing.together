@@ -105,6 +105,21 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 .section-title.light { color: var(--white); }
 .section-title strong { color: var(--orange); font-weight: 900; }
 
+.whyus-platter {
+    display: block;
+    height: 280px;
+    width: auto;
+    margin: 12px auto;
+    filter: drop-shadow(0 4px 16px rgba(26,26,26,.12));
+    opacity: 0;
+    transform: scale(.15);
+    transition: opacity .6s ease, transform .9s cubic-bezier(.34,1.56,.64,1);
+}
+.whyus-platter.platter-visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
 .section-lead {
     font-size: clamp(.9rem,1.6vw,1.05rem);
     color: var(--gray);
@@ -576,18 +591,26 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     position: relative;
     overflow: hidden;
 }
-.services::before,
-.services::after {
+.services::before {
     content: '';
     position: absolute;
+    top: 0;
     left: 0;
     right: 0;
     height: 56px;
     background: var(--warm-white);
+    clip-path: polygon(0 0,100% 0,100% 100%);
+}
+.services::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: var(--cream);
     clip-path: polygon(0 0,100% 100%,0 100%);
 }
-.services::before { top: 0; clip-path: polygon(0 0,100% 0,100% 100%); }
-.services::after  { bottom: 0; clip-path: polygon(0 0,100% 100%,0 100%); }
 
 .services-bg-text {
     position: absolute;
@@ -798,6 +821,95 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 /* ══════════════════════════════
    PROCESS
 ══════════════════════════════ */
+
+/* ══════════════════════════════
+   FRUIT CHARACTER PARADE
+══════════════════════════════ */
+.fruit-parade {
+    position: relative;
+    height: 200px;
+    background: var(--cream);
+    overflow: hidden;           /* clips off-screen entry */
+}
+
+.fp-char {
+    position: absolute;
+    bottom: 0;
+    opacity: 0;
+    will-change: transform, opacity;
+    cursor: default;
+    user-select: none;
+}
+.fp-char img {
+    display: block;
+    height: 160px;
+    width: auto;
+    filter: drop-shadow(0 10px 20px rgba(26,26,26,.18));
+}
+.fp-pear img { height: 230px; }
+
+/* Default positions (where they land) */
+.fp-pineapple { left:  5%; }
+.fp-combo     { left: 50%; transform: translateX(-50%); }
+.fp-pear      { right: 18%; }
+.fp-tomato    { right: 4%; }
+
+/* ── Entry keyframes ── */
+@keyframes fpFromLeft {
+    0%   { opacity: 0; transform: translateX(-110%) rotate(-18deg) scale(.7); }
+    55%  { opacity: 1; transform: translateX(6%) rotate(5deg) scale(1.06); }
+    75%  { transform: translateX(-3%) rotate(-2deg) scale(.98); }
+    100% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); }
+}
+@keyframes fpFromRight {
+    0%   { opacity: 0; transform: translateX(110%) rotate(18deg) scale(.7); }
+    55%  { opacity: 1; transform: translateX(-6%) rotate(-5deg) scale(1.06); }
+    75%  { transform: translateX(3%) rotate(2deg) scale(.98); }
+    100% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); }
+}
+@keyframes fpFromBelow {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(130px) scale(.5); }
+    55%  { opacity: 1; transform: translateX(-50%) translateY(-22px) scale(1.1); }
+    75%  { transform: translateX(-50%) translateY(8px) scale(.97); }
+    100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+/* ── Float keyframes ── */
+@keyframes fpFloat1 { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-16px) rotate(3deg); } }
+@keyframes fpFloat2 { 0%,100% { transform: translateX(-50%) translateY(0) rotate(2deg); } 50% { transform: translateX(-50%) translateY(-12px) rotate(-2deg); } }
+@keyframes fpFloat3 { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-14px) rotate(2deg); } }
+
+/* Triggered by JS .parade-go class */
+.fruit-parade.parade-go .fp-pineapple {
+    animation: fpFromLeft  .95s cubic-bezier(.34,1.56,.64,1) 0s    forwards;
+}
+.fruit-parade.parade-go .fp-pear {
+    animation: fpFromRight .95s cubic-bezier(.34,1.56,.64,1) .14s  forwards;
+}
+.fruit-parade.parade-go .fp-tomato {
+    animation: fpFromRight .95s cubic-bezier(.34,1.56,.64,1) .28s  forwards;
+}
+.fruit-parade.parade-go .fp-combo {
+    animation: fpFromBelow .95s cubic-bezier(.34,1.56,.64,1) .44s  forwards;
+}
+
+/* Float mode after entry */
+.fp-pineapple.fp-float { opacity:1; animation: fpFloat1 3.4s ease-in-out infinite; }
+.fp-pear.fp-float      { opacity:1; animation: fpFloat3 3.8s ease-in-out infinite; }
+.fp-tomato.fp-float    { opacity:1; animation: fpFloat1 3.0s ease-in-out infinite; }
+.fp-combo.fp-float     { opacity:1; animation: fpFloat2 4.0s ease-in-out infinite; }
+
+.fp-pear   img { height: 150px; }
+.fp-tomato img { height: 130px; }
+.fp-combo  img { height: 190px; }
+
+/* Hover: happy wiggle */
+.fp-char:hover img { animation: fpWiggle .5s ease-in-out; }
+@keyframes fpWiggle {
+    0%,100% { transform: rotate(0); }
+    25%     { transform: rotate(-10deg) scale(1.08); }
+    75%     { transform: rotate(10deg) scale(1.08); }
+}
 
 .process {
     padding: var(--section-py) 0;

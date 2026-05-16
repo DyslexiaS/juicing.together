@@ -99,6 +99,35 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     });
 });
 
+/* ── Fruit Platter scale-in ── */
+const platter = document.querySelector('.whyus-platter');
+if (platter) {
+    const platterObs = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        platter.classList.add('platter-visible');
+        platterObs.unobserve(platter);
+    }, { threshold: 0.3 });
+    platterObs.observe(platter);
+}
+
+/* ── Fruit Character Parade ── */
+const fruitParade = document.getElementById('fruitParade');
+if (fruitParade) {
+    const fpObserver = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        fruitParade.classList.add('parade-go');
+        fpObserver.unobserve(fruitParade);
+
+        // After entry animation finishes → switch to float
+        const chars = fruitParade.querySelectorAll('.fp-char');
+        const delays = [950, 1090, 1230, 1390]; // pineapple, pear, tomato, combo
+        chars.forEach((el, i) => {
+            setTimeout(() => el.classList.add('fp-float'), delays[i]);
+        });
+    }, { threshold: 0.5 });
+    fpObserver.observe(fruitParade);
+}
+
 /* ── Step arrows — progressive reveal ── */
 const stepArrows = document.querySelectorAll('.step-arrow');
 const arrowObserver = new IntersectionObserver((entries) => {
