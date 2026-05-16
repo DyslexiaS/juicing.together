@@ -978,7 +978,18 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 .cta-content p {
     font-size: clamp(.9rem,1.6vw,1.05rem);
     color: rgba(255,255,255,.65);
-    margin-bottom: 40px;
+    margin-bottom: 16px;
+}
+.cta-scarcity {
+    display: inline-block;
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--yellow);
+    background: rgba(255,193,7,.12);
+    border: 1px solid rgba(255,193,7,.3);
+    padding: 6px 16px;
+    border-radius: var(--r-pill);
+    margin-bottom: 40px !important;
 }
 .cta-actions {
     display: flex;
