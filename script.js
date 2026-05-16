@@ -12,20 +12,6 @@ const revealObserver = new IntersectionObserver((entries) => {
     rootMargin: '0px 0px -48px 0px'
 });
 
-/* ── Hero Mascots — trigger on page load ── */
-const heroMascots = document.querySelectorAll('.m-hero');
-heroMascots.forEach((el) => {
-    // after a short delay let CSS animation+float layer kick in
-    const delay = parseFloat(
-        el.style.animationDelay ||
-        getComputedStyle(el).animationDelay || '0'
-    );
-    setTimeout(() => {
-        el.classList.add('mascot-visible');
-        // switch to float after bounce completes
-        setTimeout(() => el.classList.add('mascot-float'), 900);
-    }, 0); // CSS delays handle stagger
-});
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
