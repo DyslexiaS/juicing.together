@@ -589,27 +589,6 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     background: var(--green);
     padding: var(--section-py) 0;
     position: relative;
-    overflow: hidden;
-}
-.services::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 56px;
-    background: var(--warm-white);
-    clip-path: polygon(0 0,100% 0,100% 100%);
-}
-.services::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 56px;
-    background: var(--cream);
-    clip-path: polygon(0 0,100% 100%,0 100%);
 }
 
 .services-bg-text {
@@ -1320,7 +1299,6 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     .cta-actions { flex-direction: column; }
     .btn-cta-line { width: 100%; max-width: 320px; justify-content: center; }
     .process-deco { display: none; }
-    .services::before, .services::after { height: 30px; }
 }
 
 /* ── Accessibility: reduced motion ── */
