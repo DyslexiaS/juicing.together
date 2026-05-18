@@ -1,15 +1,20 @@
 # 揪喝果汁 robots.txt
-# ⚠️  部署前請將 juicing-together.pages.dev 換成真實網域
 
 # 允許所有爬蟲爬取
 User-agent: *
 Allow: /
+Allow: /llms.txt
+Allow: /llm.txt
 
 # 禁止爬取（目前無需要擋的路徑，保留備用）
 # Disallow: /admin/
 
 # Sitemap 位置
 Sitemap: https://juicing-together.pages.dev/sitemap.xml
+
+# LLM 服務摘要
+# 標準入口：https://juicing-together.pages.dev/llms.txt
+# 備用入口：https://juicing-together.pages.dev/llm.txt
 
 # Google Image Bot
 User-agent: Googlebot-Image

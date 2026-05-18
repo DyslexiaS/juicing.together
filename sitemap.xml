@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  揪喝果汁 Sitemap
-  ⚠️  部署前請將 juicing-together.pages.dev 換成真實網域（例如：juicingtogether.tw）
--->
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml"
@@ -10,7 +6,7 @@
   <!-- 首頁 / Landing Page -->
   <url>
     <loc>https://juicing-together.pages.dev/</loc>
-    <lastmod>2026-05-16</lastmod>
+    <lastmod>2026-05-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link

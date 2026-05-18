@@ -55,6 +55,7 @@ document.addEventListener('click', (e) => {
         navMobile.classList.remove('open');
         navToggle.classList.remove('open');
         navToggle.setAttribute('aria-expanded', 'false');
+        navMobile.setAttribute('aria-hidden', 'true');
     }
 });
 
