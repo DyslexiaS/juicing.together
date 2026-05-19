@@ -29,7 +29,7 @@
 - `index.html`：首頁內容、SEO meta、Open Graph、Schema.org 結構化資料、所有頁面區塊。
 - `style.css`：網站版面、色彩、響應式設計、動畫與服務卡視覺權重。
 - `script.js`：捲動顯示動畫、固定導覽列、手機選單、FAQ 展開收合、Line 浮動按鈕控制。
-- `assets/icons/`：網站使用的水果與品牌 SVG 圖示。
+- `assets/icons/`：網站使用的水果、品牌圖示與服務圖片資產。
 - `robots.txt`：搜尋引擎爬取設定。
 - `sitemap.xml`：搜尋引擎 Sitemap。
 - `llms.txt`：提供給 AI/LLM 讀取的網站服務摘要，協助理解服務定位、服務項目、服務區域與聯絡方式。
