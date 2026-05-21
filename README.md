@@ -57,7 +57,7 @@
 
 ## 維護方式
 
-直接編輯 `index.html` 可調整文案、連結與 SEO 內容；調整視覺樣式請編輯 `style.css`，修改後需重新產生 `style.min.css`；互動行為請編輯 `script.js`。若更換正式網域，請同步更新 `index.html` 的 canonical、Open Graph URL、`robots.txt` 與 `sitemap.xml`。
+直接編輯 `index.html` 可調整文案、連結與 SEO 內容；調整視覺樣式請編輯 `style.css`，修改後需重新產生 `style.min.css`，並確認文字與背景通過基本對比度檢查；互動行為請編輯 `script.js`。若更換正式網域，請同步更新 `index.html` 的 canonical、Open Graph URL、`robots.txt` 與 `sitemap.xml`。
 
 若服務內容、配送範圍、電話、Line 或定位關鍵字有變動，也需要同步更新 `llms.txt` 與 `llm.txt`，讓 AI 搜尋與摘要工具讀到一致資訊。
 

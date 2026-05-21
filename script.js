@@ -174,3 +174,20 @@ if (lineFloat && footer) {
 
     footerObserver.observe(footer);
 }
+
+/* ── GA4 conversion events ── */
+document.querySelectorAll('a[href*="lin.ee"]').forEach(link => {
+    link.addEventListener('click', () => {
+        if (typeof gtag === 'function') {
+            gtag('event', 'line_click', { event_category: 'conversion' });
+        }
+    });
+});
+
+document.querySelectorAll('a[href^="tel:"]').forEach(link => {
+    link.addEventListener('click', () => {
+        if (typeof gtag === 'function') {
+            gtag('event', 'phone_click', { event_category: 'conversion' });
+        }
+    });
+});

@@ -7,6 +7,7 @@
     --orange:       #FF6B35;
     --orange-dk:    #E8552A;
     --orange-lt:    #FF8C5A;
+    --orange-text:  #B8421F;
     --yellow:       #FFC107;
     --yellow-lt:    #FFD54F;
     --green:        #1B4332;
@@ -91,15 +92,15 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     font-weight: 700;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--orange);
-    background: rgba(255,107,53,.1);
+    color: var(--orange-text);
+    background: rgba(184,66,31,.12);
     padding: 5px 14px;
     border-radius: var(--r-pill);
     margin-bottom: 14px;
 }
 .eyebrow.light {
-    color: var(--yellow);
-    background: rgba(255,193,7,.18);
+    color: #FFE082;
+    background: rgba(255,224,130,.18);
 }
 
 .section-title {
@@ -611,13 +612,16 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     position: absolute;
     bottom: -20px;
     right: -40px;
+    pointer-events: none;
+    user-select: none;
+}
+.services-bg-text::before {
+    content: attr(data-text);
     font-family: var(--font-serif);
     font-size: clamp(8rem,18vw,18rem);
     font-weight: 600;
     color: rgba(255,255,255,.04);
     line-height: 1;
-    pointer-events: none;
-    user-select: none;
     letter-spacing: -.04em;
 }
 
@@ -1233,7 +1237,7 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 
 .footer-slogan {
     font-size: .92rem;
-    color: rgba(255,255,255,.45);
+    color: rgba(255,255,255,.72);
     line-height: 1.75;
     margin-bottom: 24px;
 }
@@ -1271,7 +1275,7 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: rgba(255,255,255,.5);
+    color: rgba(255,255,255,.72);
     font-size: .90rem;
     font-weight: 600;
     padding: 8px 16px;
@@ -1292,7 +1296,7 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,.35);
+    color: rgba(255,255,255,.82);
     margin-bottom: 20px;
 }
 
@@ -1307,7 +1311,7 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 .footer-contact span,
 .footer-contact a {
     font-size: .92rem;
-    color: rgba(255,255,255,.58);
+    color: rgba(255,255,255,.72);
     line-height: 1.65;
     transition: color var(--t);
 }
@@ -1320,7 +1324,7 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 }
 .footer-services li {
     font-size: .92rem;
-    color: rgba(255,255,255,.48);
+    color: rgba(255,255,255,.68);
     padding-left: 14px;
     position: relative;
 }
@@ -1338,8 +1342,8 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     padding-top: 24px;
     text-align: center;
 }
-.footer-bottom p { font-size: .75rem; color: rgba(255,255,255,.25); line-height: 1.6; }
-.footer-seo-note { color: rgba(255,255,255,.15) !important; margin-top: 6px; }
+.footer-bottom p { font-size: .75rem; color: rgba(255,255,255,.58); line-height: 1.6; }
+.footer-seo-note { color: rgba(255,255,255,.5) !important; margin-top: 6px; }
 
 /* ══════════════════════════════
    RESPONSIVE
