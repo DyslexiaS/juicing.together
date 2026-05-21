@@ -34,6 +34,7 @@
 
 - `index.html`：首頁內容、SEO meta、Open Graph、Schema.org 結構化資料、所有頁面區塊。
 - `style.css`：網站版面、色彩、響應式設計、動畫與服務卡視覺權重。
+- `style.min.css`：部署時載入的壓縮 CSS，由 `style.css` 產生，用來降低 Lighthouse 的 CSS payload。
 - `script.js`：捲動顯示動畫、固定導覽列、手機選單、FAQ 展開收合、Line 浮動按鈕控制。
 - `assets/icons/`：網站使用的水果、品牌圖示與服務圖片資產。
 - `assets/hero/`：首頁首屏 Hero 圖片的 AVIF/WebP 響應式版本，供 LCP 圖片優先載入。
@@ -56,7 +57,7 @@
 
 ## 維護方式
 
-直接編輯 `index.html` 可調整文案、連結與 SEO 內容；調整視覺樣式請編輯 `style.css`；互動行為請編輯 `script.js`。若更換正式網域，請同步更新 `index.html` 的 canonical、Open Graph URL、`robots.txt` 與 `sitemap.xml`。
+直接編輯 `index.html` 可調整文案、連結與 SEO 內容；調整視覺樣式請編輯 `style.css`，修改後需重新產生 `style.min.css`；互動行為請編輯 `script.js`。若更換正式網域，請同步更新 `index.html` 的 canonical、Open Graph URL、`robots.txt` 與 `sitemap.xml`。
 
 若服務內容、配送範圍、電話、Line 或定位關鍵字有變動，也需要同步更新 `llms.txt` 與 `llm.txt`，讓 AI 搜尋與摘要工具讀到一致資訊。
 
@@ -68,4 +69,6 @@
 
 服務卡與裝飾圖請優先放入 `assets/optimized/`，依實際顯示尺寸輸出壓縮版本。不要直接在頁面引用大型 SVG、原始照片或 512px 以上的 icon；新增圖片時也請補上 `width`、`height`、`loading` 與 `decoding` 屬性。
 
-Cloudflare Pages 會讀取 `_headers`：`assets/*` 使用 30 天快取，HTML/CSS/JS 使用短快取。若未來導入含 hash 的檔名，才適合把圖片快取改成一年並加上 `immutable`。
+Cloudflare Pages 會讀取 `_headers`：預設使用 5 分鐘短快取，`assets/*` 使用 30 天快取，`robots.txt` 與 `sitemap.xml` 使用 1 小時快取。若未來導入含 hash 的檔名，才適合把圖片快取改成一年並加上 `immutable`。
+
+更新樣式後可執行 `npx --yes clean-css-cli -o style.min.css style.css` 重新壓縮 CSS，首頁會載入 `style.min.css`。
