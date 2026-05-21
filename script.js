@@ -17,16 +17,39 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 /* ── Sticky Nav ── */
 const nav = document.getElementById('nav');
-let lastScrollY = 0;
 
-const updateNav = () => {
-    const scrollY = window.scrollY;
-    nav.classList.toggle('scrolled', scrollY > 72);
-    lastScrollY = scrollY;
-};
+if ('IntersectionObserver' in window) {
+    const navTrigger = document.createElement('span');
+    navTrigger.setAttribute('aria-hidden', 'true');
+    navTrigger.style.cssText = 'position:absolute;top:72px;left:0;width:1px;height:1px;pointer-events:none;';
+    document.body.prepend(navTrigger);
 
-window.addEventListener('scroll', updateNav, { passive: true });
-updateNav();
+    const navObserver = new IntersectionObserver(([entry]) => {
+        nav.classList.toggle('scrolled', !entry.isIntersecting);
+    });
+
+    navObserver.observe(navTrigger);
+} else {
+    let ticking = false;
+    let isScrolled = false;
+
+    const updateNav = () => {
+        const nextScrolled = window.scrollY > 72;
+        if (nextScrolled !== isScrolled) {
+            nav.classList.toggle('scrolled', nextScrolled);
+            isScrolled = nextScrolled;
+        }
+        ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(updateNav);
+    }, { passive: true });
+
+    updateNav();
+}
 
 /* ── Mobile Nav Toggle ── */
 const navToggle   = document.getElementById('navToggle');
@@ -90,12 +113,7 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
         if (!target) return;
         e.preventDefault();
 
-        const navH = parseInt(
-            getComputedStyle(document.documentElement)
-                .getPropertyValue('--nav-h-sm')
-        ) || 56;
-
-        const top = target.getBoundingClientRect().top + window.scrollY - navH;
+        const top = target.getBoundingClientRect().top + window.scrollY - 72;
         window.scrollTo({ top, behavior: 'smooth' });
     });
 });

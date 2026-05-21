@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>揪喝果汁｜台北會議水果餐盒・台北企業水果餐盒</title>
-    <link rel="icon" type="image/svg+xml" href="assets/icons/pineapple.svg">
+    <link rel="icon" type="image/png" href="assets/icons/favicon.png">
     <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
     <meta name="description" content="台北中山區揪喝果汁服務 HR、行政與活動企劃，提供台北企業水果餐盒、台北會議水果餐盒、辦公室定期配送、水果禮盒與健康新鮮果汁，適合員工福利、會議水果盒與公司下午茶水果。">
     <meta name="keywords" content="企業水果餐盒,台北企業水果餐盒,台北企業水果盒,中山區企業水果餐盒,台北中山區水果餐盒,辦公室水果配送,中山區辦公室水果配送,HR員工福利水果,行政辦公室水果配送,會議水果盒,會議水果餐盒台北,會議茶水水果餐盒,台北會議水果餐盒,公司下午茶水果,公司水果訂購,企業水果配送,鮮切水果盒,現切水果餐盒,現打果汁外送,水果禮盒台北,揪喝果汁">
@@ -14,7 +14,15 @@
     <!-- Canonical — 換成真實網域後更新 -->
     <link rel="canonical" href="https://juicing-together.pages.dev/">
     <link rel="alternate" type="text/plain" href="https://juicing-together.pages.dev/llms.txt" title="LLM service summary">
-    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1920&q=80" fetchpriority="high">
+    <link
+        rel="preload"
+        as="image"
+        href="assets/hero/hero-1280.avif"
+        imagesrcset="assets/hero/hero-640.avif 640w, assets/hero/hero-960.avif 960w, assets/hero/hero-1280.avif 1280w, assets/hero/hero-1600.avif 1600w"
+        imagesizes="100vw"
+        type="image/avif"
+        fetchpriority="high"
+    >
 
     <!-- Open Graph -->
     <meta property="og:title" content="揪喝果汁｜台北會議水果餐盒・台北企業水果餐盒">
@@ -30,11 +38,6 @@
     <meta name="twitter:title" content="揪喝果汁｜台北會議水果餐盒">
     <meta name="twitter:description" content="健康新鮮的台北企業水果餐盒，適合 HR 員工福利、行政採購、會議茶水與辦公室固定水果配送。">
     <meta name="twitter:image" content="https://juicing-together.pages.dev/assets/icons/social-share-image.jpg">
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Cormorant+Garamond:ital,wght@0,600;1,400;1,600&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 
@@ -189,12 +192,26 @@
     <!-- ① Hero -->
     <section class="hero" id="hero">
         <div class="hero-bg">
-            <img
-                src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1920&q=80"
-                alt=""
-                loading="eager"
-                fetchpriority="high"
-            >
+            <picture>
+                <source
+                    type="image/avif"
+                    srcset="assets/hero/hero-640.avif 640w, assets/hero/hero-960.avif 960w, assets/hero/hero-1280.avif 1280w, assets/hero/hero-1600.avif 1600w"
+                    sizes="100vw"
+                >
+                <source
+                    type="image/webp"
+                    srcset="assets/hero/hero-640.webp 640w, assets/hero/hero-960.webp 960w, assets/hero/hero-1280.webp 1280w, assets/hero/hero-1600.webp 1600w"
+                    sizes="100vw"
+                >
+                <img
+                    src="assets/hero/hero-1280.webp"
+                    alt=""
+                    width="1280"
+                    height="853"
+                    loading="eager"
+                    fetchpriority="high"
+                >
+            </picture>
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
@@ -232,7 +249,7 @@
         <div class="container">
             <header class="section-header">
                 <span class="eyebrow">為什麼選擇揪喝</span>
-                <img src="assets/icons/fruit-platter.svg" alt="" class="whyus-platter" aria-hidden="true">
+                <img src="assets/optimized/fruit-platter-560.webp" alt="" class="whyus-platter" width="560" height="560" loading="lazy" decoding="async" aria-hidden="true">
                 <h2 class="section-title">專為 HR、行政與活動企劃設計的<strong>健康水果補給</strong></h2>
                 <p class="section-lead">為台北中山區企業提供適合多人享用的水果餐盒，讓員工福利、辦公室配送、會議茶水與活動補給都能新鮮、乾淨、準時到位。</p>
             </header>
@@ -240,7 +257,7 @@
                 <div class="feature-card reveal">
                     <div class="feature-num">01</div>
                     <div class="feature-icon-wrap">
-                        <img src="assets/icons/fruits.png" alt="" class="feature-icon-img" aria-hidden="true">
+                        <img src="assets/optimized/fruits-76.webp" alt="" class="feature-icon-img" width="76" height="76" loading="lazy" decoding="async" aria-hidden="true">
                     </div>
                     <h3>適合長期配合</h3>
                     <p>依公司人數、配送頻率與預算規劃水果餐盒，適合 HR 員工福利、會議茶水、教育訓練與固定合作。</p>
@@ -248,7 +265,7 @@
                 <div class="feature-card reveal delay-1">
                     <div class="feature-num">02</div>
                     <div class="feature-icon-wrap">
-                        <img src="assets/icons/express-delivery.png" alt="" class="feature-icon-img" aria-hidden="true">
+                        <img src="assets/optimized/express-delivery-76.webp" alt="" class="feature-icon-img" width="76" height="76" loading="lazy" decoding="async" aria-hidden="true">
                     </div>
                     <h3>衛生分裝，拿取方便</h3>
                     <p>以單份餐盒方式整理與配送，降低共食疑慮，讓員工、貴賓與活動來賓都能安心享用。</p>
@@ -256,7 +273,7 @@
                 <div class="feature-card reveal delay-2">
                     <div class="feature-num">03</div>
                     <div class="feature-icon-wrap">
-                        <img src="assets/icons/box.png" alt="" class="feature-icon-img" aria-hidden="true">
+                        <img src="assets/optimized/box-76.webp" alt="" class="feature-icon-img" width="76" height="76" loading="lazy" decoding="async" aria-hidden="true">
                     </div>
                     <h3>準時配送到辦公室</h3>
                     <p>配合企業作息與活動時段安排配送，減少行政追貨與臨時補救的壓力。</p>
@@ -264,7 +281,7 @@
                 <div class="feature-card reveal delay-3">
                     <div class="feature-num">04</div>
                     <div class="feature-icon-wrap">
-                        <img src="assets/icons/stamp.png" alt="" class="feature-icon-img" aria-hidden="true">
+                        <img src="assets/optimized/stamp-76.webp" alt="" class="feature-icon-img" width="76" height="76" loading="lazy" decoding="async" aria-hidden="true">
                     </div>
                     <h3>支援企業請款溝通</h3>
                     <p>可依合作需求討論付款、請款與開立收據方式，讓採購流程更符合公司內部作業。</p>
@@ -287,11 +304,18 @@
                 <article class="service-card service-card-highlight reveal">
                     <div class="service-ribbon">推薦</div>
                     <div class="service-img-wrap">
-                        <img
-                            src="assets/icons/fruit-bowl.webp"
-                            alt="企業水果餐盒定期配送"
-                            loading="lazy"
-                        >
+                        <picture>
+                            <source type="image/avif" srcset="assets/optimized/fruit-bowl-368.avif 368w, assets/optimized/fruit-bowl-567.avif 567w" sizes="(max-width: 1024px) 100vw, 368px">
+                            <source type="image/webp" srcset="assets/optimized/fruit-bowl-368.webp 368w, assets/optimized/fruit-bowl-567.webp 567w" sizes="(max-width: 1024px) 100vw, 368px">
+                            <img
+                                src="assets/optimized/fruit-bowl-567.webp"
+                                alt="企業水果餐盒定期配送"
+                                width="567"
+                                height="423"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </picture>
                         <div class="service-badge">最多企業選擇</div>
                     </div>
                     <div class="service-body">
@@ -306,11 +330,18 @@
 
                 <article class="service-card reveal delay-1">
                     <div class="service-img-wrap">
-                        <img
-                            src="assets/icons/juice-bottles.webp"
-                            alt="當季水果現榨果汁"
-                            loading="lazy"
-                        >
+                        <picture>
+                            <source type="image/avif" srcset="assets/optimized/juice-bottles-372.avif 372w, assets/optimized/juice-bottles-744.avif 744w" sizes="(max-width: 1024px) 100vw, 372px">
+                            <source type="image/webp" srcset="assets/optimized/juice-bottles-372.webp 372w, assets/optimized/juice-bottles-744.webp 744w" sizes="(max-width: 1024px) 100vw, 372px">
+                            <img
+                                src="assets/optimized/juice-bottles-744.webp"
+                                alt="當季水果現榨果汁"
+                                width="744"
+                                height="595"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </picture>
                         <div class="service-badge accent">新鮮補給</div>
                     </div>
                     <div class="service-body">
@@ -325,11 +356,18 @@
 
                 <article class="service-card reveal delay-2">
                     <div class="service-img-wrap">
-                        <img
-                            src="https://images.unsplash.com/photo-1519996529931-28324d5a630e?auto=format&fit=crop&w=700&q=80"
-                            alt="水果外燴與節慶禮盒"
-                            loading="lazy"
-                        >
+                        <picture>
+                            <source type="image/avif" srcset="assets/optimized/fruit-gift-372.avif 372w, assets/optimized/fruit-gift-744.avif 744w" sizes="(max-width: 1024px) 100vw, 372px">
+                            <source type="image/webp" srcset="assets/optimized/fruit-gift-372.webp 372w, assets/optimized/fruit-gift-744.webp 744w" sizes="(max-width: 1024px) 100vw, 372px">
+                            <img
+                                src="assets/optimized/fruit-gift-744.webp"
+                                alt="水果外燴與節慶禮盒"
+                                width="744"
+                                height="1116"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </picture>
                         <div class="service-badge green">季節服務</div>
                     </div>
                     <div class="service-body">
@@ -390,16 +428,16 @@
     <!-- Fruit Characters Parade -->
     <div class="fruit-parade" id="fruitParade" aria-hidden="true">
         <div class="fp-char fp-pineapple">
-            <img src="assets/icons/pineapple.svg" alt="" draggable="false">
+            <img src="assets/optimized/pineapple-320.webp" alt="" width="320" height="320" loading="lazy" decoding="async" draggable="false">
         </div>
         <div class="fp-char fp-combo">
-            <img src="assets/icons/combo.svg" alt="" draggable="false">
+            <img src="assets/optimized/combo-380.webp" alt="" width="380" height="380" loading="lazy" decoding="async" draggable="false">
         </div>
         <div class="fp-char fp-pear">
-            <img src="assets/icons/pear.svg" alt="" draggable="false">
+            <img src="assets/optimized/pear-300.webp" alt="" width="300" height="313" loading="lazy" decoding="async" draggable="false">
         </div>
         <div class="fp-char fp-tomato">
-            <img src="assets/icons/tomato.svg" alt="" draggable="false">
+            <img src="assets/optimized/tomato-260.webp" alt="" width="260" height="260" loading="lazy" decoding="async" draggable="false">
         </div>
     </div>
 
@@ -614,6 +652,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
