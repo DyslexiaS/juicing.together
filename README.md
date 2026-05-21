@@ -67,7 +67,7 @@
 
 網站已移除 Google Fonts 阻塞載入，改用系統中文字型堆疊。若未來需要品牌字體，建議自架子集化字型並使用 `font-display: swap`，避免重新造成 FCP/LCP 延遲。
 
-服務卡與裝飾圖請優先放入 `assets/optimized/`，依實際顯示尺寸輸出壓縮版本。不要直接在頁面引用大型 SVG、原始照片或 512px 以上的 icon；新增圖片時也請補上 `width`、`height`、`loading` 與 `decoding` 屬性。
+服務卡與裝飾圖請優先放入 `assets/optimized/`，依實際顯示尺寸輸出壓縮版本與 responsive `srcset`。例如 why-us 水果盤提供 280px/490px 版本，避免小尺寸顯示時下載 560px 圖片。不要直接在頁面引用大型 SVG、原始照片或 512px 以上的 icon；新增圖片時也請補上 `width`、`height`、`loading` 與 `decoding` 屬性。
 
 Cloudflare Pages 會讀取 `_headers`：預設使用 5 分鐘短快取，`assets/*` 使用 30 天快取，`robots.txt` 與 `sitemap.xml` 使用 1 小時快取。若未來導入含 hash 的檔名，才適合把圖片快取改成一年並加上 `immutable`。
 
