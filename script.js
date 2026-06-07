@@ -106,17 +106,36 @@ document.querySelectorAll('.faq-q').forEach(btn => {
 });
 
 /* ── Smooth Scroll ── */
+const NAV_SCROLL_OFFSET = 72;
+
+const scrollToAnchor = (hash, behavior = 'smooth') => {
+    if (!hash || hash === '#') return false;
+    const target = document.querySelector(hash);
+    if (!target) return false;
+    const top = target.getBoundingClientRect().top + window.scrollY - NAV_SCROLL_OFFSET;
+    window.scrollTo({ top, behavior });
+    return true;
+};
+
 document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
-        const id     = link.getAttribute('href');
-        const target = document.querySelector(id);
-        if (!target) return;
+        const id = link.getAttribute('href');
+        if (!scrollToAnchor(id, 'smooth')) return;
         e.preventDefault();
-
-        const top = target.getBoundingClientRect().top + window.scrollY - 72;
-        window.scrollTo({ top, behavior: 'smooth' });
+        history.pushState(null, '', id);
     });
 });
+
+const scrollToInitialHash = () => {
+    if (!window.location.hash) return;
+    scrollToAnchor(window.location.hash, 'auto');
+};
+
+window.addEventListener('hashchange', () => {
+    scrollToAnchor(window.location.hash, 'smooth');
+});
+
+window.addEventListener('load', scrollToInitialHash);
 
 /* ── Quote Calculator ── */
 const calculator = document.getElementById('calculator');
@@ -246,6 +265,228 @@ if (calculator) {
         }
     };
 
+    const PICKER_WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
+    const TIME_SLOTS = (() => {
+        const slots = [];
+        for (let hour = 8; hour <= 20; hour += 1) {
+            slots.push(`${String(hour).padStart(2, '0')}:00`);
+            if (hour < 20) slots.push(`${String(hour).padStart(2, '0')}:30`);
+        }
+        return slots;
+    })();
+
+    let openPickerWrap = null;
+
+    const formatDateLabel = iso => {
+        if (!iso) return '請選擇日期';
+        const date = new Date(`${iso}T12:00:00`);
+        if (Number.isNaN(date.getTime())) return '請選擇日期';
+        return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日（週${PICKER_WEEKDAYS[date.getDay()]}）`;
+    };
+
+    const formatTimeLabel = hhmm => {
+        if (!hhmm) return '請選擇時段';
+        return hhmm.replace(':', '：');
+    };
+
+    const closeAllPickers = () => {
+        document.querySelectorAll('.picker-wrap').forEach(wrap => {
+            wrap.classList.remove('is-open');
+            wrap.querySelector('.picker-trigger')?.setAttribute('aria-expanded', 'false');
+
+            const pickerId = wrap.dataset.picker;
+            const backdrop = wrap.querySelector('.picker-backdrop')
+                || document.querySelector(`.picker-backdrop[data-picker-wrap="${pickerId}"]`);
+            const popup = wrap.querySelector('.picker-popup')
+                || document.querySelector(`.picker-popup[data-picker-wrap="${pickerId}"]`);
+
+            backdrop?.setAttribute('hidden', '');
+            popup?.setAttribute('hidden', '');
+            backdrop?.classList.remove('is-portal');
+            popup?.classList.remove('is-portal');
+
+            if (backdrop && backdrop.parentElement !== wrap) wrap.appendChild(backdrop);
+            if (popup && popup.parentElement !== wrap) wrap.appendChild(popup);
+        });
+        document.body.classList.remove('picker-open');
+        openPickerWrap = null;
+    };
+
+    const mountPickerPortal = wrap => {
+        if (!window.matchMedia('(max-width: 768px)').matches) return;
+
+        const backdrop = wrap.querySelector('.picker-backdrop');
+        const popup = wrap.querySelector('.picker-popup');
+        if (!backdrop || !popup) return;
+
+        backdrop.dataset.pickerWrap = wrap.dataset.picker;
+        popup.dataset.pickerWrap = wrap.dataset.picker;
+        backdrop.classList.add('is-portal');
+        popup.classList.add('is-portal');
+        document.body.appendChild(backdrop);
+        document.body.appendChild(popup);
+    };
+
+    const getPickerLayers = wrap => {
+        const pickerId = wrap.dataset.picker;
+        return {
+            backdrop: document.querySelector(`.picker-backdrop[data-picker-wrap="${pickerId}"]`)
+                || wrap.querySelector('.picker-backdrop'),
+            popup: document.querySelector(`.picker-popup[data-picker-wrap="${pickerId}"]`)
+                || wrap.querySelector('.picker-popup')
+        };
+    };
+
+    const openPicker = wrap => {
+        closeAllPickers();
+        wrap.classList.add('is-open');
+        wrap.querySelector('.picker-trigger')?.setAttribute('aria-expanded', 'true');
+        mountPickerPortal(wrap);
+
+        const { backdrop, popup } = getPickerLayers(wrap);
+        backdrop?.removeAttribute('hidden');
+        popup?.removeAttribute('hidden');
+        document.body.classList.add('picker-open');
+        openPickerWrap = wrap;
+    };
+
+    const syncPickerDisplays = () => {
+        const dateDisplay = document.getElementById('pickupDateDisplay');
+        const timeDisplay = document.getElementById('pickupTimeDisplay');
+        if (dateDisplay) {
+            dateDisplay.textContent = formatDateLabel(els.pickupDate.value);
+            dateDisplay.classList.toggle('is-placeholder', !els.pickupDate.value);
+        }
+        if (timeDisplay) {
+            timeDisplay.textContent = formatTimeLabel(els.pickupTime.value);
+            timeDisplay.classList.toggle('is-placeholder', !els.pickupTime.value);
+        }
+    };
+
+    const initDateTimePickers = () => {
+        const dateWrap = document.querySelector('[data-picker="date"]');
+        const timeWrap = document.querySelector('[data-picker="time"]');
+        const dateGrid = document.getElementById('pickupDateGrid');
+        const dateTitle = document.getElementById('pickupDateTitle');
+        const timeGrid = document.getElementById('pickupTimeGrid');
+        if (!dateWrap || !timeWrap || !dateGrid || !dateTitle || !timeGrid) return;
+
+        let viewDate = els.pickupDate.value
+            ? new Date(`${els.pickupDate.value}T12:00:00`)
+            : new Date(`${minPickupDate()}T12:00:00`);
+
+        const renderDateGrid = () => {
+            const year = viewDate.getFullYear();
+            const month = viewDate.getMonth();
+            const minIso = minPickupDate();
+            const todayIso = new Date().toISOString().split('T')[0];
+
+            dateTitle.textContent = `${year}年${month + 1}月`;
+            dateGrid.replaceChildren();
+
+            for (let i = 0; i < new Date(year, month, 1).getDay(); i += 1) {
+                const spacer = document.createElement('span');
+                spacer.className = 'picker-day-spacer';
+                spacer.setAttribute('aria-hidden', 'true');
+                dateGrid.appendChild(spacer);
+            }
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day += 1) {
+                const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'picker-day';
+                btn.textContent = String(day);
+                btn.dataset.date = iso;
+
+                if (iso < minIso) btn.disabled = true;
+                if (iso === todayIso) btn.classList.add('is-today');
+                if (iso === els.pickupDate.value) btn.classList.add('is-selected');
+
+                btn.addEventListener('click', () => {
+                    els.pickupDate.value = iso;
+                    els.pickupDate.dispatchEvent(new Event('change', { bubbles: true }));
+                    closeAllPickers();
+                });
+                dateGrid.appendChild(btn);
+            }
+        };
+
+        const renderTimeGrid = () => {
+            timeGrid.replaceChildren();
+            TIME_SLOTS.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'picker-time-slot';
+                btn.textContent = formatTimeLabel(slot);
+                btn.dataset.time = slot;
+                if (slot === els.pickupTime.value) btn.classList.add('is-selected');
+                btn.addEventListener('click', () => {
+                    els.pickupTime.value = slot;
+                    els.pickupTime.dispatchEvent(new Event('change', { bubbles: true }));
+                    closeAllPickers();
+                });
+                timeGrid.appendChild(btn);
+            });
+        };
+
+        dateWrap.querySelector('[data-action="prev-month"]')?.addEventListener('click', event => {
+            event.stopPropagation();
+            viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1);
+            renderDateGrid();
+        });
+
+        dateWrap.querySelector('[data-action="next-month"]')?.addEventListener('click', event => {
+            event.stopPropagation();
+            viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
+            renderDateGrid();
+        });
+
+        dateWrap.querySelector('.picker-trigger')?.addEventListener('click', event => {
+            event.stopPropagation();
+            if (dateWrap.classList.contains('is-open')) {
+                closeAllPickers();
+                return;
+            }
+            if (els.pickupDate.value) {
+                viewDate = new Date(`${els.pickupDate.value}T12:00:00`);
+            }
+            renderDateGrid();
+            openPicker(dateWrap);
+        });
+
+        timeWrap.querySelector('.picker-trigger')?.addEventListener('click', event => {
+            event.stopPropagation();
+            if (timeWrap.classList.contains('is-open')) {
+                closeAllPickers();
+                return;
+            }
+            renderTimeGrid();
+            openPicker(timeWrap);
+        });
+
+        document.querySelectorAll('.picker-backdrop').forEach(backdrop => {
+            backdrop.addEventListener('click', closeAllPickers);
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeAllPickers();
+        });
+
+        document.addEventListener('click', event => {
+            if (!openPickerWrap) return;
+            if (openPickerWrap.contains(event.target)) return;
+
+            const { popup } = getPickerLayers(openPickerWrap);
+            if (popup?.contains(event.target)) return;
+
+            closeAllPickers();
+        });
+
+        window.matchMedia('(max-width: 768px)').addEventListener('change', closeAllPickers);
+    };
+
     const setCopyFeedback = (message, type = '') => {
         els.copyFeedback.textContent = message;
         els.copyFeedback.classList.remove('is-error', 'is-success');
@@ -283,6 +524,7 @@ if (calculator) {
         els.total.textContent = formatCurrency(total);
 
         els.preview.value = buildMessage({ baseSubtotal, discount, bagSubtotal, total });
+        syncPickerDisplays();
     };
 
     calculator.querySelectorAll('input, textarea').forEach(el => {
@@ -395,6 +637,7 @@ if (calculator) {
         finishCopyFlow(false);
     });
 
+    initDateTimePickers();
     renderCalculator();
 }
 

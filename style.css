@@ -1060,6 +1060,7 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 ══════════════════════════════ */
 .calculator {
     padding: var(--section-py) 0;
+    scroll-margin-top: var(--nav-h);
     background:
         radial-gradient(circle at top right, rgba(255,193,7,.14), transparent 26%),
         radial-gradient(circle at bottom left, rgba(27,67,50,.08), transparent 28%),
@@ -1194,8 +1195,11 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     box-shadow: 0 18px 36px rgba(26,26,26,.08);
 }
 .calculator-size-card.featured {
-    border-color: rgba(255,107,53,.28);
-    box-shadow: 0 18px 32px rgba(255,107,53,.10);
+    border-color: rgba(255,107,53,.22);
+    box-shadow: 0 18px 32px rgba(255,107,53,.08);
+}
+.calculator-size-card.featured:has(.size-card-input:checked) {
+    border-color: var(--orange);
 }
 .size-card-input {
     position: absolute;
@@ -1203,20 +1207,33 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
     opacity: 0;
     cursor: pointer;
 }
-.size-card-input:checked ~ .calculator-size-media,
-.size-card-input:checked ~ .calculator-size-copy {
-    filter: none;
+.calculator-image-stack:has(.size-card-input:checked) .calculator-size-card:not(:has(.size-card-input:checked)) {
+    opacity: .58;
+    filter: saturate(.7);
+    border-color: rgba(27,67,50,.08);
+    box-shadow: none;
+    transform: none;
 }
 .calculator-size-card:has(.size-card-input:checked) {
-    border-color: rgba(255,107,53,.55);
-    box-shadow: 0 0 0 4px rgba(255,107,53,.12), 0 18px 32px rgba(255,107,53,.10);
-    transform: translateY(-2px);
+    border: 2px solid var(--orange);
+    background: linear-gradient(135deg, rgba(255,107,53,.14) 0%, rgba(255,252,247,.98) 52%, #fff 100%);
+    box-shadow:
+        0 0 0 4px rgba(255,107,53,.18),
+        0 22px 40px rgba(255,107,53,.2);
+    transform: translateY(-3px) scale(1.015);
+    z-index: 1;
+}
+.calculator-size-card:has(.size-card-input:checked) .calculator-size-media {
+    box-shadow: 0 8px 20px rgba(255,107,53,.18);
 }
 .calculator-size-card:has(.size-card-input:checked) .size-badge {
-    background: rgba(255,107,53,.16);
+    background: linear-gradient(135deg, var(--orange) 0%, var(--orange-lt) 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255,107,53,.28);
 }
 .calculator-size-card:has(.size-card-input:checked) .calculator-size-copy strong {
     color: var(--orange-dk);
+    font-size: 1.34rem;
 }
 .calculator-size-media {
     width: 92px;
@@ -1326,6 +1343,254 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
 .calculator-input-time {
     min-height: 52px;
 }
+
+/* ── Custom date / time picker popups ── */
+.picker-wrap {
+    position: relative;
+}
+.picker-native-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+.picker-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    min-height: 52px;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.picker-trigger-value {
+    flex: 1;
+    min-width: 0;
+    font-size: .96rem;
+    font-weight: 700;
+    color: var(--dark);
+}
+.picker-trigger-value.is-placeholder {
+    color: var(--gray);
+    font-weight: 600;
+}
+.picker-trigger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: rgba(255,107,53,.1);
+    color: var(--orange);
+    transition: background var(--t), color var(--t), transform var(--t);
+}
+.picker-trigger:hover .picker-trigger-icon,
+.picker-trigger:focus-visible .picker-trigger-icon,
+.picker-wrap.is-open .picker-trigger-icon {
+    background: rgba(255,107,53,.18);
+    color: var(--orange-dk);
+}
+.picker-wrap.is-open .picker-trigger {
+    border-color: rgba(255,107,53,.6);
+    box-shadow: 0 0 0 4px rgba(255,107,53,.12);
+    background: #fff;
+}
+
+.picker-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: rgba(26,26,26,.28);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    animation: pickerFadeIn .2s var(--ease);
+}
+.picker-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    z-index: 81;
+    padding: 16px;
+    border: 1px solid rgba(27,67,50,.12);
+    border-radius: 20px;
+    background: linear-gradient(180deg, #fffdfa 0%, #fff 100%);
+    box-shadow: var(--sh-md);
+    animation: pickerSlideIn .24s var(--ease);
+}
+.picker-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.picker-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--dark);
+    letter-spacing: .02em;
+}
+.picker-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(27,67,50,.1);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--green-mid);
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color var(--t), background var(--t), color var(--t), transform var(--t);
+}
+.picker-nav:hover {
+    border-color: rgba(255,107,53,.35);
+    background: rgba(255,107,53,.08);
+    color: var(--orange-dk);
+    transform: translateY(-1px);
+}
+.picker-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+.picker-weekdays span {
+    text-align: center;
+    font-size: .78rem;
+    font-weight: 800;
+    color: var(--gray);
+    padding: 4px 0;
+}
+.picker-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+.picker-day {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    aspect-ratio: 1;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--dark);
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--t), color var(--t), box-shadow var(--t), transform var(--t);
+}
+.picker-day:hover:not(:disabled) {
+    background: rgba(255,107,53,.1);
+    color: var(--orange-dk);
+    transform: translateY(-1px);
+}
+.picker-day.is-today:not(.is-selected) {
+    box-shadow: inset 0 0 0 1.5px rgba(45,106,79,.35);
+    color: var(--green-mid);
+}
+.picker-day.is-selected {
+    background: linear-gradient(135deg, var(--orange) 0%, var(--orange-lt) 100%);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(255,107,53,.28);
+}
+.picker-day:disabled,
+.picker-day.is-disabled {
+    opacity: .28;
+    cursor: not-allowed;
+}
+.picker-day-spacer {
+    aspect-ratio: 1;
+}
+
+.picker-popup-label {
+    margin-bottom: 12px;
+    font-size: .84rem;
+    font-weight: 700;
+    color: var(--gray);
+}
+.picker-time-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+.picker-time-slot {
+    border: 1px solid rgba(27,67,50,.1);
+    border-radius: 14px;
+    background: #fff;
+    padding: 11px 8px;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 700;
+    color: var(--gray-dk);
+    cursor: pointer;
+    transition: border-color var(--t), background var(--t), color var(--t), box-shadow var(--t), transform var(--t);
+}
+.picker-time-slot:hover {
+    border-color: rgba(255,107,53,.35);
+    background: rgba(255,107,53,.08);
+    color: var(--orange-dk);
+    transform: translateY(-1px);
+}
+.picker-time-slot.is-selected {
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--orange) 0%, var(--orange-lt) 100%);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(255,107,53,.24);
+}
+
+@keyframes pickerFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes pickerSlideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+body.picker-open {
+    overflow: hidden;
+}
+
+.picker-backdrop.is-portal {
+    z-index: 1000;
+}
+.picker-popup.is-portal {
+    position: fixed;
+    top: auto;
+    left: 16px;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: auto;
+    max-height: min(72vh, 460px);
+    overflow-y: auto;
+    z-index: 1001;
+    border-radius: 24px;
+}
+.picker-popup.is-portal .picker-time-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: none;
+}
+
 .calculator-textarea {
     min-height: 92px;
     resize: vertical;
@@ -1931,4 +2196,6 @@ button { font-family: var(--font-sans); cursor: pointer; border: none; backgroun
         transition-duration: .01ms !important;
     }
     .reveal { opacity: 1; transform: none; }
+    .picker-backdrop,
+    .picker-popup { animation: none; }
 }
