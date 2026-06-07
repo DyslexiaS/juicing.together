@@ -118,6 +118,286 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     });
 });
 
+/* ── Quote Calculator ── */
+const calculator = document.getElementById('calculator');
+if (calculator) {
+    const BOX_PRICES = { small: 75, medium: 105, large: 155 };
+    const PICKUP_LABEL = '來店取貨（長春路146號）';
+    let lastDeliveryAddress = '';
+    let lastBagQty = '1';
+
+    const els = {
+        size: () => document.querySelector('input[name="boxSize"]:checked'),
+        qty: document.getElementById('boxQty'),
+        payment: () => document.querySelector('input[name="paymentMethod"]:checked'),
+        needsBag: () => document.querySelector('input[name="needsBag"]:checked'),
+        bagQtyField: document.getElementById('bagQtyField'),
+        bagQty: document.getElementById('bagQty'),
+        name: document.getElementById('customerName'),
+        pickupDate: document.getElementById('pickupDate'),
+        pickupTime: document.getElementById('pickupTime'),
+        delivery: () => document.querySelector('input[name="deliveryMethod"]:checked'),
+        address: document.getElementById('customerAddress'),
+        phone: document.getElementById('customerPhone'),
+        receipt: () => document.querySelector('input[name="receiptNeeded"]:checked'),
+        receiptIdField: document.getElementById('receiptIdField'),
+        receiptId: document.getElementById('receiptId'),
+        base: document.getElementById('summaryBase'),
+        discount: document.getElementById('summaryDiscount'),
+        bag: document.getElementById('summaryBag'),
+        total: document.getElementById('summaryTotal'),
+        preview: document.getElementById('linePreview'),
+        copyBtn: document.getElementById('copyQuoteBtn'),
+        copyFeedback: document.getElementById('copyFeedback')
+    };
+
+    const formatCurrency = value => `$${value.toLocaleString('zh-TW')}`;
+    const sizeLabel = value => ({ small: '小', medium: '中', large: '大' }[value] || '小');
+    const paymentLabel = value => ({ cash: '現金', transfer: '匯款' }[value] || '現金');
+    const deliveryLabel = value => ({ pickup: '來店取貨', delivery: '外送' }[value] || '來店取貨');
+    const minPickupDate = () => {
+        const d = new Date();
+        d.setDate(d.getDate() + 3);
+        return d.toISOString().split('T')[0];
+    };
+    const buildPickupSlot = () => {
+        const date = (els.pickupDate.value || '').trim();
+        const time = (els.pickupTime.value || '').trim();
+        if (!date && !time) return '';
+        if (date && time) return `${date} ${time}`;
+        return date || time;
+    };
+
+    const syncDeliveryAddress = () => {
+        const delivery = els.delivery().value;
+        if (delivery === 'pickup') {
+            if ((els.address.value || '').trim() && els.address.value !== PICKUP_LABEL) {
+                lastDeliveryAddress = els.address.value;
+            }
+            els.address.value = PICKUP_LABEL;
+            els.address.readOnly = true;
+        } else {
+            els.address.readOnly = false;
+            if (els.address.value === PICKUP_LABEL) {
+                els.address.value = lastDeliveryAddress;
+            }
+        }
+    };
+
+    const syncBagField = () => {
+        const wantsBag = els.needsBag().value === 'yes';
+        if (!wantsBag) {
+            lastBagQty = els.bagQty.value || lastBagQty;
+        }
+        els.bagQty.disabled = !wantsBag;
+        els.bagQtyField.style.opacity = wantsBag ? '1' : '.55';
+        if (wantsBag && !els.bagQty.value) els.bagQty.value = lastBagQty;
+    };
+
+    const syncReceiptField = () => {
+        const needsReceipt = els.receipt().value === 'yes';
+        els.receiptId.disabled = !needsReceipt;
+        els.receiptIdField.style.opacity = needsReceipt ? '1' : '.55';
+        if (!needsReceipt) els.receiptId.value = '';
+    };
+
+    const buildMessage = totals => {
+        const size = sizeLabel(els.size().value);
+        const qty = Math.max(1, Math.floor(Number(els.qty.value) || 1));
+        const wantsBag = els.needsBag().value === 'yes';
+        const bagQty = Math.max(1, Math.floor(Number(els.bagQty.value) || 1));
+        const delivery = els.delivery().value;
+        const address = (els.address.value || '').trim() || (delivery === 'pickup' ? PICKUP_LABEL : '');
+
+        return [
+            `姓名：${(els.name.value || '').trim()}`,
+            `品項：會議水果盒（${size}）x ${qty}`,
+            `購買塑膠袋：${wantsBag ? `是，${bagQty} 個` : '否'}`,
+            `取餐時段：${buildPickupSlot()}`,
+            `取貨方式：${deliveryLabel(delivery)}`,
+            `地址：${address}`,
+            `電話：${(els.phone.value || '').trim()}`,
+            `收據：${els.receipt().value === 'yes' ? '是' : '否'}`,
+            ...(els.receipt().value === 'yes' && (els.receiptId.value || '').trim() ? [`統編：${(els.receiptId.value || '').trim()}`] : []),
+            `付款方式：${paymentLabel(els.payment().value)}`,
+            `原價小計：${formatCurrency(totals.baseSubtotal)}`,
+            `付款折扣：-${formatCurrency(totals.discount)}`,
+            `塑膠袋：${formatCurrency(totals.bagSubtotal)}`,
+            `預估總計：${formatCurrency(totals.total)}`
+        ].join('\n');
+    };
+
+    const validateBeforeCopy = () => {
+        const missing = [];
+        if (!(els.name.value || '').trim()) missing.push('姓名');
+        if (!(els.pickupDate.value || '').trim()) missing.push('取餐日期');
+        if (!(els.pickupTime.value || '').trim()) missing.push('取餐時段');
+        if (!(els.phone.value || '').trim()) missing.push('電話');
+        if (els.delivery().value === 'delivery' && !(els.address.value || '').trim()) missing.push('地址');
+        if (els.needsBag().value === 'yes' && !(els.bagQty.value || '').trim()) missing.push('塑膠袋數量');
+        return missing;
+    };
+
+    const initializePickupDate = () => {
+        const minDate = minPickupDate();
+        els.pickupDate.min = minDate;
+        if (!els.pickupDate.value || els.pickupDate.value < minDate) {
+            els.pickupDate.value = minDate;
+        }
+    };
+
+    const setCopyFeedback = (message, type = '') => {
+        els.copyFeedback.textContent = message;
+        els.copyFeedback.classList.remove('is-error', 'is-success');
+        if (type) els.copyFeedback.classList.add(type);
+        els.copyFeedback.hidden = !message;
+        els.copyFeedback.setAttribute('role', type === 'is-error' ? 'alert' : 'status');
+    };
+
+    const clearCopyFeedbackIfError = () => {
+        if (els.copyFeedback.classList.contains('is-error')) {
+            setCopyFeedback('', '');
+        }
+    };
+
+    const renderCalculator = () => {
+        clearCopyFeedbackIfError();
+        initializePickupDate();
+        syncDeliveryAddress();
+        syncBagField();
+        syncReceiptField();
+
+        const size = els.size().value;
+        const qty = Math.max(1, Math.floor(Number(els.qty.value) || 1));
+        const wantsBag = els.needsBag().value === 'yes';
+        const bagQty = wantsBag ? Math.max(1, Math.floor(Number(els.bagQty.value) || 1)) : 0;
+        const unitPrice = BOX_PRICES[size];
+        const baseSubtotal = unitPrice * qty;
+        const discount = qty * 5;
+        const bagSubtotal = bagQty * 1;
+        const total = Math.max(0, baseSubtotal - discount + bagSubtotal);
+
+        els.base.textContent = formatCurrency(baseSubtotal);
+        els.discount.textContent = `-${formatCurrency(discount)}`;
+        els.bag.textContent = formatCurrency(bagSubtotal);
+        els.total.textContent = formatCurrency(total);
+
+        els.preview.value = buildMessage({ baseSubtotal, discount, bagSubtotal, total });
+    };
+
+    calculator.querySelectorAll('input, textarea').forEach(el => {
+        el.addEventListener('input', renderCalculator);
+        el.addEventListener('change', renderCalculator);
+    });
+
+    const LINE_URL = 'https://lin.ee/xCwVELfD';
+
+    const copyToClipboardSync = text => {
+        if (!text) return false;
+
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.cssText = [
+            'position:fixed',
+            'top:0',
+            'left:0',
+            'width:2em',
+            'height:2em',
+            'padding:0',
+            'border:none',
+            'outline:none',
+            'box-shadow:none',
+            'background:transparent',
+            'opacity:0',
+            'pointer-events:none'
+        ].join(';');
+        document.body.appendChild(textarea);
+
+        textarea.focus({ preventScroll: true });
+        textarea.select();
+        textarea.setSelectionRange(0, text.length);
+
+        if (/ipad|iphone|ipod/i.test(navigator.userAgent)) {
+            const range = document.createRange();
+            range.selectNodeContents(textarea);
+            const selection = window.getSelection();
+            selection?.removeAllRanges();
+            selection?.addRange(range);
+            textarea.setSelectionRange(0, text.length);
+        }
+
+        let copied = false;
+        try {
+            copied = document.execCommand('copy');
+        } catch {
+            copied = false;
+        }
+
+        document.body.removeChild(textarea);
+        return copied;
+    };
+
+    const openLineChannel = () => {
+        const link = document.createElement('a');
+        link.href = LINE_URL;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    };
+
+    els.copyBtn.addEventListener('click', () => {
+        const missing = validateBeforeCopy();
+        if (missing.length) {
+            setCopyFeedback(`請先填寫：${missing.join('、')}`, 'is-error');
+            return;
+        }
+
+        const text = els.preview.value;
+        const copied = copyToClipboardSync(text);
+        let feedbackTimer = 3200;
+
+        const showCopySuccess = () => {
+            setCopyFeedback('已複製，正在開啟 Line', 'is-success');
+            if (typeof gtag === 'function') {
+                gtag('event', 'quote_copy', { event_category: 'conversion' });
+            }
+        };
+
+        const showCopyFailure = () => {
+            setCopyFeedback('無法自動複製，請手動複製下方詢價內容後貼到 Line', 'is-error');
+            els.preview.focus();
+            els.preview.select();
+            feedbackTimer = 5000;
+        };
+
+        const finishCopyFlow = didCopy => {
+            openLineChannel();
+            if (didCopy) showCopySuccess();
+            else showCopyFailure();
+            window.setTimeout(() => setCopyFeedback('', ''), feedbackTimer);
+        };
+
+        if (copied) {
+            finishCopyFlow(true);
+            return;
+        }
+
+        if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(text)
+                .then(() => finishCopyFlow(true))
+                .catch(() => finishCopyFlow(false));
+            return;
+        }
+
+        finishCopyFlow(false);
+    });
+
+    renderCalculator();
+}
+
 /* ── Fruit Platter scale-in ── */
 const platter = document.querySelector('.whyus-platter');
 if (platter) {
