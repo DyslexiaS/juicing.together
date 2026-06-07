@@ -1,83 +1,107 @@
 # 揪喝果汁 Landing Page
 
-這是一個單頁式形象與詢價網站，定位是「台北企業健康水果補給」。目標客群為企業內負責員工福利、行政採購與活動安排的人，包括 HR、行政、總務與活動企劃。網站主打健康、新鮮、可長期配合的多人水果餐盒，並延伸提供水果禮盒與健康新鮮果汁。
+台北企業水果餐盒 / 會議水果盒單頁網站。
+主目標：讓 HR、行政、總務、活動企劃先在網站上完成試算，再複製內容到 Line 官方帳號詢價。
 
-## 網站定位
+## 目前定位
+- 服務：企業水果餐盒、會議水果盒、辦公室定期配送、現打果汁、水果禮盒
+- 區域：台北市 / 新北市，以中山區、松山區、大同區為核心
+- 主要轉換：
+  1. 官網試算價格
+  2. 複製詢價內容
+  3. 跳轉 Line 官方帳號 `https://lin.ee/xCwVELfD`
 
-- TA：企業內負責員工福利、行政採購、會議茶水與活動安排的 HR、行政、總務與活動企劃。
-- 核心需求：可長期配合、品質穩定、健康新鮮、適合多人享用、配送準時、企業可開收據。
-- 提供服務：企業多人水果餐盒、辦公室定期水果配送、水果禮盒、活動水果配送、當季水果現榨果汁。
-- 主要轉換：引導訪客先使用官網線上試算會議水果盒價格，再複製內容到 Line 完成詢價；果汁、禮盒與電話詢問仍保留 Line／電話入口。
+## 價格與規則
+### 會議水果盒
+- 小：`$75`
+- 中：`$105`
+- 大：`$155`
 
-## SEO 利基關鍵字
+### 折扣與加購
+- 現金 / 匯款：**每盒折 `$5`**
+- 塑膠袋：`$1 / 個`
+- 需提前 **三天** 預訂
+- 每日承接上限：約 **300** 份
 
-台北競品多集中在「會議水果、現切水果、下午茶水果、雙北當日配送、月結、電子發票、冷鏈配送」等大方向。本站優先搶更精準、較接近採購決策的長尾詞：
+### 詢價欄位
+試算器目前支援：
+- 尺寸
+- 盒數
+- 付款方式
+- 塑膠袋
+- 姓名
+- 取餐日期 / 時段
+- 來店取貨 / 外送
+- 地址
+- 電話
+- 收據是 / 否
+- 統編（收據選是時）
 
-- 台北中山區企業水果餐盒
+## 專案檔案
+- `index.html`：頁面內容、SEO、Schema、所有區塊
+- `style.css`：原始樣式檔
+- `style.min.css`：正式載入樣式檔
+- `script.js`：前端互動邏輯
+- `assets/hero/`：Hero 響應式圖片
+- `assets/optimized/`：壓縮後圖片，頁面應優先用這裡
+- `assets/icons/`：favicon、社群縮圖與品牌圖示
+- `_headers` / `_redirects`：Cloudflare Pages 設定
+- `robots.txt` / `sitemap.xml`：SEO 檔案
+- `llms.txt` / `llm.txt`：給 AI crawler 的服務摘要
+- `google1a2f56daf8a69e53.html`：Google Search Console 驗證
+- `CLAUDE.md`：給 Claude/AI 協作使用的專案規則
+
+## 部署
+- 平台：Cloudflare Pages
+- 網址：`https://juicing-together.pages.dev/`
+- 推送到 GitHub 後自動部署
+
+## 維護注意事項
+### 1. 樣式修改
+正式頁面載入的是 `style.min.css`。
+若修改 `style.css`，要重新壓縮：
+
+```bash
+npx --yes clean-css-cli -o style.min.css style.css
+```
+
+### 2. 圖片資產
+- 新圖片先壓縮到 `assets/optimized/`
+- 不要直接引用超大 SVG 或原始大圖
+- 補上 `width` / `height` / `loading` / `decoding`
+- 可用 project-local helper：
+
+```bash
+uv run py .claude/skills/image-optimization/scripts/optimize_image.py <source> --name <slug> --widths 372,744
+```
+
+### 3. SEO / 結構化資料
+若修改網址、標題、描述、關鍵字、FAQ、付款規則或服務內容，要一起檢查：
+- `index.html`
+- `robots.txt`
+- `sitemap.xml`
+- `llms.txt`
+- `llm.txt`
+
+### 4. 試算器邏輯
+若調整價格或業務規則，請同步更新：
+- HTML 顯示文案
+- `script.js` 計算邏輯
+- FAQ 文案
+- Schema / README / CLAUDE.md
+
+## SEO 主軸
+目前主打：
 - 台北企業水果餐盒
-- 台北企業水果盒
-- 中山區辦公室水果配送
-- HR 員工福利水果
-- 行政辦公室水果配送
-- 會議水果盒
-- 會議水果餐盒台北
-- 會議茶水水果餐盒
 - 台北會議水果餐盒
-- 公司下午茶水果
-- 現切水果餐盒
-- 松山區辦公室水果配送
-- 大同區企業水果餐盒
-- 企業水果餐盒試訂
-- 企業水果餐盒開收據
-- 價格透明
-- 線上試算
-- 立即試算價格
 - 會議水果盒試算
 - 水果餐盒價格試算
-- 水果餐盒詢價
-- 會議水果盒價格
-- 企業水果餐盒試算
+- 辦公室水果配送
+- HR 員工福利水果
+- 公司下午茶水果
 
-## 檔案結構
-
-- `index.html`：首頁內容、SEO meta、Open Graph、Schema.org 結構化資料、所有頁面區塊。
-- `style.css`：網站版面、色彩、響應式設計、動畫與服務卡視覺權重。
-- `style.min.css`：部署時載入的壓縮 CSS，由 `style.css` 產生，用來降低 Lighthouse 的 CSS payload。
-- `script.js`：捲動顯示動畫、固定導覽列、手機選單、FAQ 展開收合、會議水果盒試算器、Line 浮動按鈕控制。
-- `assets/icons/`：網站使用的水果、品牌圖示與服務圖片資產。
-- `assets/hero/`：首頁首屏 Hero 圖片的 AVIF/WebP 響應式版本，供 LCP 圖片優先載入。
-- `assets/optimized/`：服務卡、特色圖示與裝飾水果的壓縮後圖片版本，避免部署過大的原始素材。
-- `_headers`：Cloudflare Pages 回應標頭設定，讓圖片等靜態資產使用長快取，HTML/CSS/JS 使用短快取。
-- `robots.txt`：搜尋引擎爬取設定。
-- `sitemap.xml`：搜尋引擎 Sitemap。
-- `llms.txt`：提供給 AI/LLM 讀取的網站服務摘要，協助理解服務定位、服務項目、服務區域與聯絡方式。
-- `llm.txt`：`llms.txt` 的備用入口，避免使用者或爬蟲輸入單數檔名時找不到內容。
-
-## 首頁區塊
-
-- Hero：第一屏主打企業健康水果補給，強調健康、新鮮、價格透明與線上試算。
-- 為什麼選擇揪喝：說明 HR、行政、活動企劃在意的穩定、衛生、配送、請款與價格透明。
-- 服務方案：呈現企業多人水果餐盒、當季水果現榨果汁、水果禮盒與活動配送。
-- 社會證明：用企業客戶情境強化信任。
-- 合作流程：從線上試算、複製 Line、確認請款到準時配送。
-- 快速試算：會議水果盒線上試算，支援一鍵複製到 Line。
-- FAQ：回答試算、承接量、配送範圍、試訂、付款與收據問題。
-- CTA：引導立即試算價格，並保留 Line 詢問果汁、禮盒與長期配合。
-
-## 維護方式
-
-直接編輯 `index.html` 可調整文案、連結與 SEO 內容；調整視覺樣式請編輯 `style.css`，修改後需重新產生 `style.min.css`，並確認文字與背景通過基本對比度檢查；互動行為請編輯 `script.js`。若更換正式網域，請同步更新 `index.html` 的 canonical、Open Graph URL、`robots.txt` 與 `sitemap.xml`。
-
-若服務內容、配送範圍、電話、Line 或定位關鍵字有變動，也需要同步更新 `llms.txt` 與 `llm.txt`，讓 AI 搜尋與摘要工具讀到一致資訊。
-
-## 效能維護重點
-
-首頁首屏圖片使用 `assets/hero/` 內的本地 AVIF/WebP 多尺寸版本，`index.html` 透過 preload、`picture`、`srcset`、`sizes` 與 `fetchpriority="high"` 載入，避免依賴第三方圖片拖慢 LCP。若未來更換 Hero 圖，請同步輸出 640、960、1280、1600 寬度的 AVIF/WebP 版本，並保留圖片的 `width`、`height`。
-
-網站已移除 Google Fonts 阻塞載入，改用系統中文字型堆疊。若未來需要品牌字體，建議自架子集化字型並使用 `font-display: swap`，避免重新造成 FCP/LCP 延遲。
-
-服務卡與裝飾圖請優先放入 `assets/optimized/`，依實際顯示尺寸輸出壓縮版本與 responsive `srcset`。例如 why-us 水果盤提供 280px/490px 版本，避免小尺寸顯示時下載 560px 圖片。不要直接在頁面引用大型 SVG、原始照片或 512px 以上的 icon；新增圖片時也請補上 `width`、`height`、`loading` 與 `decoding` 屬性。
-
-Cloudflare Pages 會讀取 `_headers`：預設使用 5 分鐘短快取，`assets/*` 使用 30 天快取，`robots.txt` 與 `sitemap.xml` 使用 1 小時快取。若未來導入含 hash 的檔名，才適合把圖片快取改成一年並加上 `immutable`。
-
-更新樣式後可執行 `npx --yes clean-css-cli -o style.min.css style.css` 重新壓縮 CSS，首頁會載入 `style.min.css`。
+## 目前 UX 重點
+- Calculator 要像報價工具，不像一般表單
+- 降低 HR / 行政詢價摩擦
+- 價格透明
+- 一鍵複製後直接開啟 Line
